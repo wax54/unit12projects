@@ -4,7 +4,95 @@
  * column until a player gets four-in-a-row (horiz, vert, or diag) or until
  * board fills (tie)
  */
+class Game {
+  constructor(width, height, boardId = 'board') {
+    if (typeof width === 'number' && typeof height === 'number') {
+      if (width > 0 && height > 0) {
+        //initial properties
+        this.WIDTH = width;
+        this.HEIGHT = height;
+        this.boardId = boardId;
 
+        this.currPlayer = 1;
+        this.board = [];
+        //initial setup
+        this.makeBoard();
+        this.makeHtmlBoard();
+
+      } else throw new Error('Width and Height must be greater than 0')
+    } else throw new Error('Width and Height must be numbers');
+  }
+
+  /** makeBoard: create in-JS board structure:
+   *   board = array of rows, each row is array of cells  (board[y][x])
+   */
+  makeBoard() {
+    for (let y = 0; y < this.HEIGHT; y++) {
+      this.board.push(Array.from({ length: this.WIDTH }));
+      this.board[y].fill(null);
+    }
+  }
+
+  /** makeHtmlBoard: make HTML table and row of column tops. */
+  makeHtmlBoard() {
+    const board = document.getElementById(this.boardId);
+
+    // make column tops (clickable area for adding a piece to that column)
+    const top = document.createElement('tr');
+    top.setAttribute('id', 'column-top');
+    top.addEventListener('click', handleClick);
+
+    for (let x = 0; x < this.WIDTH; x++) {
+      const headCell = document.createElement('td');
+      headCell.setAttribute('id', x);
+      top.append(headCell);
+    }
+
+    board.append(top);
+
+    // make main part of board
+    for (let y = 0; y < this.HEIGHT; y++) {
+      const row = document.createElement('tr');
+
+      for (let x = 0; x < this.WIDTH; x++) {
+        const cell = document.createElement('td');
+        cell.setAttribute('id', `${y}-${x}`);
+        row.append(cell);
+      }
+
+      board.append(row);
+    }
+  }
+
+  /** findSpotForCol: given column x, return top empty y (null if filled) */
+  findSpotForCol(x) {
+    for (let y = this.HEIGHT - 1; y >= 0; y--) {
+      if (!this.board[y][x]) {
+        return y;
+      }
+    }
+    return null;
+  }
+
+  /** placeInTable: update DOM to place piece into HTML table of board */
+  placeInTable(y, x) {
+    const piece = document.createElement('div');
+    piece.classList.add('piece');
+    piece.classList.add(`p${this.currPlayer}`);
+    piece.style.top = -50 * (y + 2);
+
+    const spot = document.getElementById(`${y}-${x}`);
+    spot.append(piece);
+  }
+
+
+  /** endGame: announce game end  
+   * I don't think I need this in the class
+   */
+  endGame(msg) {
+    alert(msg);
+  }
+}
 const WIDTH = 7;
 const HEIGHT = 6;
 
@@ -51,6 +139,7 @@ function makeHtmlBoard() {
 
     board.append(row);
   }
+
 }
 
 /** findSpotForCol: given column x, return top empty y (null if filled) */
@@ -65,7 +154,6 @@ function findSpotForCol(x) {
 }
 
 /** placeInTable: update DOM to place piece into HTML table of board */
-
 function placeInTable(y, x) {
   const piece = document.createElement('div');
   piece.classList.add('piece');
