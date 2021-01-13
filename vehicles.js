@@ -11,30 +11,33 @@ class Vehicle {
         return `The vehicle is a ${make} ${model} from ${year}`;
     }
 }
+
 class Car extends Vehicle{
     constructor(make,model,year){
         super(make, model, year);
         this.numWheels = 4;
     }
 }
+
 class Motorcycle extends Vehicle{
     constructor(make,model,year){
         super(make, model, year);
         this.numWheels = 2;
     }
     revEngine(){
-        return "VROON!!!";
+        return "VROOM!!!";
     }
 }
+
 class Garage{
     constructor(capacity){
         this.capacity = capacity;
         this.vehicles =[];
     }
     add(vehicle){
-        if(this.vehicle.length < this.capacity){
+        if(this.vehicles.length < this.capacity){
             if(vehicle instanceof Vehicle){
-                vehicle.push(vehicle);
+                this.vehicles.push(vehicle);
             }else {
                 return "Only vehicles are allowed in here!";
             }
