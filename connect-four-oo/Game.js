@@ -90,8 +90,8 @@ class Game {
   placeInTable(y, x) {
     const piece = document.createElement('div');
     piece.classList.add('piece');
-    piece.classList.add(`p${this.currPlayer}`);
-    piece.style.backgroundColor(this.currPlayer.color);
+    piece.classList.add(`p${this.currPlayer.id}`);
+    piece.style.backgroundColor = this.currPlayer.color;
 
     const spot = document.getElementById(`${y}-${x}`);
     spot.append(piece);
@@ -117,7 +117,7 @@ class Game {
 
     // check for win
     if (this.checkForWin()) {
-      return this.endGame(`Player ${this.currPlayer} won!`);
+      return this.endGame(`${this.currPlayer.color} won!`);
     }
 
     // check for tie
