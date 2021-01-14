@@ -105,8 +105,11 @@ class Game {
   /** handleClick: handle click of column top to play piece */
 
   handleClick(evt) {
+    //game already over, return
+    if (this.checkForWin()) { return }
     // get x from ID of clicked cell
     const x = +evt.target.id;
+    //not a valid click, return
     if (isNaN(x)) return;
     // get next spot in column (if none, ignore click)
     const y = this.findSpotForCol(x);
