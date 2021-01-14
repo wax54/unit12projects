@@ -17,15 +17,15 @@ class Game {
    * @param {number} height The number of cells High the Game should be
    * @param {string or number} boardId the id of the board table that will be appended to the game div
    */
-  constructor(width, height, boardId = 'board') {
+  constructor(width, height, p1, p2) {
     if (typeof width === 'number' && typeof height === 'number') {
       if (width > 0 && height > 0) {
         //initial properties
         this.WIDTH = width;
         this.HEIGHT = height;
-        this.boardId = boardId;
-
-        this.currPlayer = 1;
+        this.p1 = p1;
+        this.p2 = p2;
+        this.currPlayer = this.p1;
         this.board = [];
         //initial setup
         this.makeBoard();
@@ -74,7 +74,6 @@ class Game {
 
       board.append(row);
     }
-    gameSpace.append(board);
   }
 
   /** findSpotForCol: given column x, return top empty y (null if filled) */
@@ -92,6 +91,7 @@ class Game {
     const piece = document.createElement('div');
     piece.classList.add('piece');
     piece.classList.add(`p${this.currPlayer}`);
+    piece.style.backgroundColor(this.currPlayer.color);
 
     const spot = document.getElementById(`${y}-${x}`);
     spot.append(piece);
@@ -126,7 +126,7 @@ class Game {
     }
 
     // switch players
-    this.currPlayer = this.currPlayer === 1 ? 2 : 1;
+    this.currPlayer = this.currPlayer === this.p1 ? this.p2 : this.p1;
   }
 
   checkForWin() {
