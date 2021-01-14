@@ -18,6 +18,8 @@ class Game {
    * @param {string or number} boardId the id of the board table that will be appended to the game div
    */
   constructor(width, height, ...players) {
+    //if no players, throw error 
+    //note - one player ok
     if (players.length === 0) {
       throw new Error('You Need at Least One Player to Play')
     }
