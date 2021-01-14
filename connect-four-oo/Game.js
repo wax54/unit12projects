@@ -56,7 +56,7 @@ class Game {
     // make column tops (clickable area for adding a piece to that column)
     const top = document.createElement('tr');
     top.setAttribute('id', 'column-top');
-    top.addEventListener('click', handleClick.bind(this));
+    top.addEventListener('click', this.handleClick.bind(this));
 
     for (let x = 0; x < this.WIDTH; x++) {
       const headCell = document.createElement('td');
@@ -102,6 +102,34 @@ class Game {
   }
 
 
+  /** handleClick: handle click of column top to play piece */
+
+  handleClick(evt) {
+    // get x from ID of clicked cell
+    const x = +evt.target.id;
+    if (isNaN(x)) return;
+    // get next spot in column (if none, ignore click)
+    const y = this.findSpotForCol(x);
+    if (y === null) return;
+
+    // place piece in board and add to HTML table
+    this.board[y][x] = this.currPlayer;
+    this.placeInTable(y, x);
+
+    // check for win
+    if (this.checkForWin()) {
+      return this.endGame(`Player ${this.currPlayer} won!`);
+    }
+
+    // check for tie
+    if (this.board.every(row => row.every(cell => cell))) {
+      return this.endGame('Tie!');
+    }
+
+    // switch players
+    this.currPlayer = this.currPlayer === 1 ? 2 : 1;
+  }
+
   checkForWin() {
     const _win = (cells) => {
       // Check four cells to see if they're all color of current player
@@ -139,34 +167,4 @@ class Game {
   endGame(msg) {
     alert(msg);
   }
-}
-
-/** handleClick: handle click of column top to play piece */
-
-function handleClick(evt) {
-  // get x from ID of clicked cell
-  const x = +evt.target.id;
-
-  // get next spot in column (if none, ignore click)
-  const y = this.findSpotForCol(x);
-  if (y === null) {
-    return;
-  }
-
-  // place piece in board and add to HTML table
-  this.board[y][x] = this.currPlayer;
-  this.placeInTable(y, x);
-
-  // check for win
-  if (this.checkForWin()) {
-    return this.endGame(`Player ${this.currPlayer} won!`);
-  }
-
-  // check for tie
-  if (this.board.every(row => row.every(cell => cell))) {
-    return this.endGame('Tie!');
-  }
-
-  // switch players
-  this.currPlayer = this.currPlayer === 1 ? 2 : 1;
 }
