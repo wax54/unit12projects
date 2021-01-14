@@ -17,15 +17,20 @@ class Game {
    * @param {number} height The number of cells High the Game should be
    * @param {string or number} boardId the id of the board table that will be appended to the game div
    */
-  constructor(width, height, p1, p2) {
+  constructor(width, height, ...players) {
+    if (players.length === 0) {
+      throw new Error('You Need at Least One Player to Play')
+    }
     if (typeof width === 'number' && typeof height === 'number') {
       if (width > 0 && height > 0) {
         //initial properties
         this.WIDTH = width;
         this.HEIGHT = height;
-        this.p1 = p1;
-        this.p2 = p2;
-        this.currPlayer = this.p1;
+
+        this.players = players;
+        this.currPlayer = players[0];
+
+        this.currPlayerNum = 0;
         this.board = [];
         //initial setup
         this.makeBoard();
@@ -33,6 +38,15 @@ class Game {
 
       } else throw new Error('Width and Height must be greater than 0')
     } else throw new Error('Width and Height must be numbers');
+
+  }
+
+  nextPlayer() {
+    this.currPlayerNum++;
+    if (this.currPlayerNum === this.players.length) {
+      this.currPlayerNum = 0;
+    }
+    return this.players[this.currPlayerNum];
   }
 
   /** makeBoard: create in-JS board structure:
@@ -90,7 +104,7 @@ class Game {
   placeInTable(y, x) {
     const piece = document.createElement('div');
     piece.classList.add('piece');
-    piece.classList.add(`p${this.currPlayer.id}`);
+    piece.classList.add(`p${this.currPlayerNum}`);
     piece.style.backgroundColor = this.currPlayer.color;
 
     const spot = document.getElementById(`${y}-${x}`);
@@ -126,7 +140,7 @@ class Game {
     }
 
     // switch players
-    this.currPlayer = this.currPlayer === this.p1 ? this.p2 : this.p1;
+    this.currPlayer = this.nextPlayer();
   }
 
   checkForWin() {

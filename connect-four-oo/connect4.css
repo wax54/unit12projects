@@ -23,6 +23,13 @@
   background-color: blue;
 }
 
+.piece.p3 {
+  background-color: yellow;
+}
+.piece.p4 {
+  background-color: purple;
+}
+
 /* column-top is table row of clickable areas for each column */
 
 #column-top td {

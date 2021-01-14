@@ -1,6 +1,5 @@
 class Player {
-    constructor(id, color) {
-        this.id = id;
+    constructor(color) {
         this.color = color
     }
 }
